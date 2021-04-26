@@ -15,6 +15,7 @@ pip install -r listabibliotekpython.txt
 pip install -r listabibliotekpythonfull.txt
 ```
 Pełne możliwości programu można uzyskać tylko dla skompilowanej wersji OpenCV w wersji 4.4.0.
+
 Więcej informacji: [Build OpenCV 4.4.0 with CUDA (GPU) Support on Windows 10 (Without Tears)](https://haroonshakeel.medium.com/build-opencv-4-4-0-with-cuda-gpu-support-on-windows-10-without-tears-aa85d470bcd0)
 
 ## Użycie
