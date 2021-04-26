@@ -1,4 +1,4 @@
-# Śledzenie poprzez detekcję z wykorzystaniem YOLOv3 i OpenCV
+# Śledzenie szczurów poprzez detekcję z wykorzystaniem YOLOv3 i OpenCV
 Implementacja detektora YOLOv3 wraz z wytrenowanym modelem.
 
 ## Instalacja
