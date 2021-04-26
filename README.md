@@ -15,7 +15,7 @@ pip install -r listabibliotekpython.txt
 pip install -r listabibliotekpythonfull.txt
 ```
 
-### Użycie
+## Użycie
 ```Linux
 python start.py -v VIDEO [-h] [-o OUTPUT] [-f] [-c CONFIDENCE] [-t THRESHOLD] 
                 [-d] [-m MAXLOSS] [-cy] [-l] [-cc]
