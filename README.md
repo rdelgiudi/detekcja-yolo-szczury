@@ -40,7 +40,7 @@ opcjonalne argumenty:
   -cc, --calccross                        oblicz ilość przecięć dróg
   ```
   
-  ### Opis programu
+  ## Opis programu
   Jest to moja implementacja detektora YOLOv3, do użytku do obserwacji szczurów. Wraz ze standardową procedurą inicjalizacji oraz ułożenia wyników detekcji znajduje się tu także prymitywny system ID oraz rysowania ścieżek.
   
   ### Użyte źródła
