@@ -21,25 +21,23 @@ python start.py -v VIDEO [-h] [-o OUTPUT] [-f] [-c CONFIDENCE] [-t THRESHOLD]
                 [-d] [-m MAXLOSS] [-cy] [-l] [-cc]
 
 wymagane argumenty:
-  -v VIDEO, --video VIDEO
-                        ścieżka pliku wideo
+  -v VIDEO, --video VIDEO   ścieżka pliku wideo
 
 opcjonalne argumenty:
-  -h, --help            wyświetl tą wiadomość pomocy i wyjdź
-  -o OUTPUT, --output OUTPUT
-                        plik wynikowy śledzenia
-  -f, --fileonly        operacje tylko na pliku, brak podglądu
-  -c CONFIDENCE, --confidence CONFIDENCE
-                        minimalna pewność algorytmu
-  -t THRESHOLD, --threshold THRESHOLD
-                        granica non maximum supression
-  -d, --drawpaths       rysuj ścieżki śledzonych obiektów
-  -m MAXLOSS, --maxloss MAXLOSS
-                        maksymalna ilość klatek, na którą może zniknąć obiekt, aby jego ścieżka nie została
-                        wyczyszczona (ta wartość +5)
-  -cy, --cythonmode     tryb cython dla poprawy wydajności (wymaga biblioteki Cython)
-  -l, --logging         zapisz raport ze śledzenia w pliku tekstowym
-  -cc, --calccross      oblicz ilość przecięć dróg
+  -h, --help                              wyświetl tą wiadomość pomocy i wyjdź
+  -o OUTPUT, --output OUTPUT              plik wynikowy śledzenia
+  -f, --fileonly                          operacje tylko na pliku, brak podglądu
+  -c CONFIDENCE, --confidence CONFIDENCE  minimalna pewność algorytmu
+  -t THRESHOLD, --threshold THRESHOLD     granica non maximum supression
+  -d, --drawpaths                         rysuj ścieżki śledzonych obiektów
+  -m MAXLOSS, --maxloss MAXLOSS           maksymalna ilość klatek, 
+                                          na którą może zniknąć obiekt,
+                                          aby jego ścieżka nie została
+                                          wyczyszczona (ta wartość +5)
+  -cy, --cythonmode                       tryb cython dla poprawy wydajności 
+                                          (wymaga biblioteki Cython)
+  -l, --logging                           zapisz raport ze śledzenia w pliku tekstowym
+  -cc, --calccross                        oblicz ilość przecięć dróg
   ```
   
   ### Opis programu
