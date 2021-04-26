@@ -17,7 +17,8 @@ pip install -r listabibliotekpythonfull.txt
 
 ### Użycie
 ```Linux
-python start.py -v VIDEO [-h] [-o OUTPUT] [-f] [-c CONFIDENCE] [-t THRESHOLD] [-d] [-m MAXLOSS] [-cy] [-l] [-cc]
+python start.py -v VIDEO [-h] [-o OUTPUT] [-f] [-c CONFIDENCE] [-t THRESHOLD] 
+                [-d] [-m MAXLOSS] [-cy] [-l] [-cc]
 
 wymagane argumenty:
   -v VIDEO, --video VIDEO
