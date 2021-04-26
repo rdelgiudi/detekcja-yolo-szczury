@@ -21,7 +21,7 @@ python start.py -v VIDEO [-h] [-o OUTPUT] [-f] [-c CONFIDENCE] [-t THRESHOLD]
                 [-d] [-m MAXLOSS] [-cy] [-l] [-cc]
 
 wymagane argumenty:
-  -v VIDEO, --video VIDEO   ścieżka pliku wideo
+  -v VIDEO, --video VIDEO                 ścieżka pliku wideo
 
 opcjonalne argumenty:
   -h, --help                              wyświetl tą wiadomość pomocy i wyjdź
