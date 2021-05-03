@@ -10,7 +10,7 @@ Program testowany w Pythonie 3.8.5
 pip install -r listabibliotekpython.txt
 ```
 
-### Pełne biblioteki (wymagane do trybu Cython. Uwaga! Potrzebny jest też kompilator C)
+### Pełne biblioteki (wymagane do trybu Qt i Cython. Uwaga! Dla trybu Cython potrzebny jest też kompilator C)
 ```Linux
 pip install -r listabibliotekpythonfull.txt
 ```
