@@ -84,7 +84,7 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
     colors = np.random.randint(0, 255, size=(100, 3), dtype="uint8")
 
     #zaznaczenie ścieżki plików dla algorytmu YOLOv3
-    weightsPath = "yolov3_rats_v3.weights"
+    weightsPath = "yolov3_rats_v3_1.weights"
     configPath = "yolov3_testing.cfg"
 
     #wczytanie detektora YOLOv3 z wytrenowanego zestawu danych COCO oraz uruchomienie CUDA (jeżeli jest wspierane)
