@@ -18,9 +18,9 @@ Pełne możliwości programu można uzyskać tylko dla skompilowanej wersji Open
 
 Więcej informacji: [Build OpenCV 4.4.0 with CUDA (GPU) Support on Windows 10 (Without Tears)](https://haroonshakeel.medium.com/build-opencv-4-4-0-with-cuda-gpu-support-on-windows-10-without-tears-aa85d470bcd0)
 
-## Użycie
+## Użycie (Wersja skryptowa)
 ```Linux
-python start.py -v VIDEO [-h] [-o OUTPUT] [-f] [-c CONFIDENCE] [-t THRESHOLD] 
+python run.py -v VIDEO [-h] [-o OUTPUT] [-f] [-c CONFIDENCE] [-t THRESHOLD] 
                 [-d] [-m MAXLOSS] [-cy] [-l] [-cc]
 
 wymagane argumenty:
@@ -42,6 +42,17 @@ opcjonalne argumenty:
   -l, --logging                           zapisz raport ze śledzenia w pliku tekstowym
   -cc, --calccross                        oblicz ilość przecięć dróg
   ```
+  ## Użycie (Wersja Qt)
+  ```Linux
+  python runqt.py [-cy]
+  
+  opcjonalne argumenty:
+  -cy, --cythonmode                       tryb cython dla poprawy wydajności 
+  ```
+  Wygląd interfejsu:
+  ![image](https://user-images.githubusercontent.com/83218453/116832814-9e1c8980-abb6-11eb-8b0b-4c18379ffef2.png)
+
+  
   
   ## Opis programu
   Jest to moja implementacja detektora YOLOv3, do użytku do obserwacji szczurów. Wraz ze standardową procedurą inicjalizacji oraz ułożenia wyników detekcji znajduje się tu także prymitywny system ID oraz rysowania ścieżek.
