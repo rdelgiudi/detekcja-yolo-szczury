@@ -4,7 +4,6 @@ cimport numpy as np
 import time
 import os
 import sys
-import progresscontroller
 from libc.math cimport sqrt
 from libc.math cimport pow
 from datetime import datetime
@@ -64,7 +63,12 @@ cdef int vectorProduct(int x1, int y1, int x2, int y2, int x3, int y3):
 cdef bint checkExtremes(int x1, int y1, int x2, int y2, int x3, int y3):
     return min(x1, x2) <= x3 and x3 <= max(x1, x2) and min(y1, y2) <= y3 and y3 <= max(y1, y2)
 
-def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fileonly : bool, drawpaths : bool, maxloss : int, logging : bool,calccross : bool, bar):
+def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fileonly : bool, drawpaths : bool, maxloss : int, logging : bool,calccross : bool, isQt : bool, bar):
+
+    if isQt:
+        import progresscontrollerqt as progresscontroller
+    else:
+        import progresscontroller
 
     DTYPE1 = np.uint8
     DTYPE2 = np.int32

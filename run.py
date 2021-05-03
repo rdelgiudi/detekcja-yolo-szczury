@@ -51,5 +51,6 @@ else:
 vs = cv2.VideoCapture(args.video)
 bar = progressbar.ProgressBar()
 
-yolodetect.startDetect(args.video ,vs ,args.confidence, args.threshold, args.output, args.fileonly, args.drawpaths, args.maxloss, args.logging, args.calccross, bar)
+yolodetect.startDetect(args.video ,vs ,args.confidence, args.threshold, args.output, args.fileonly, args.drawpaths, 
+                        args.maxloss, args.logging, args.calccross, False , bar)
 

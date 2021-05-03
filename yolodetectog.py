@@ -4,7 +4,6 @@ import time
 import os
 import sys
 from numpy.core.shape_base import atleast_2d
-import progresscontroller
 import math
 from datetime import datetime
 
@@ -63,7 +62,11 @@ def vectorProduct(x1, y1, x2, y2, x3, y3):
 def checkExtremes(x1, y1, x2, y2, x3, y3):
     return min(x1, x2) <= x3 and x3 <= max(x1, x2) and min(y1, y2) <= y3 and y3 <= max(y1, y2)
 
-def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fileonly : bool, drawpaths : bool, maxloss : int, logging : bool,calccross : bool, bar):
+def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fileonly : bool, drawpaths : bool, maxloss : int, logging : bool,calccross : bool, isQt : bool, bar):
+    if isQt:
+        import progresscontrollerqt as progresscontroller
+    else:
+        import progresscontroller
 
     programStart = time.time()
     if fileonly is True and outputfile is None:

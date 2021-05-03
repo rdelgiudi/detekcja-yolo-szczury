@@ -8,6 +8,7 @@
 *.log
 .vscode/
 __pycache__/
+vids/
 backup/
 cythonize.py
 yolov3.cfg
