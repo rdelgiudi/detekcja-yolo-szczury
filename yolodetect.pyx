@@ -95,7 +95,7 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
 
     #zaznaczenie ścieżki plików dla algorytmu YOLOv3
     cdef str weightsPath, configPath
-    weightsPath = "yolov3_rats_v2.weights"
+    weightsPath = "yolov3_rats_v3.weights"
     configPath = "yolov3_testing.cfg"
 
     #wczytanie detektora YOLOv3 z wytrenowanego zestawu danych COCO oraz uruchomienie CUDA (jeżeli jest wspierane)
