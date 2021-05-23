@@ -3,7 +3,7 @@ Implementacja detektora YOLOv3 wraz z wytrenowanym modelem.
 
 ## Instalacja
 
-Program testowany w Pythonie 3.8.5
+Program testowany w Pythonie 3.8.5.
 
 ### Wymagane biblioteki
 ```Linux
@@ -14,9 +14,11 @@ pip install -r listabibliotekpython.txt
 ```Linux
 pip install -r listabibliotekpythonfull.txt
 ```
-Pełne możliwości programu można uzyskać tylko dla skompilowanej wersji OpenCV w wersji 4.4.0.
+Pełne możliwości programu można uzyskać tylko dla skompilowanej wersji (ze wsparciem CUDA) OpenCV w wersji 4.4.0.
 
-Więcej informacji: [Build OpenCV 4.4.0 with CUDA (GPU) Support on Windows 10 (Without Tears)](https://haroonshakeel.medium.com/build-opencv-4-4-0-with-cuda-gpu-support-on-windows-10-without-tears-aa85d470bcd0)
+Więcej informacji: 
+- Windows [Build OpenCV 4.4.0 with CUDA (GPU) Support on Windows 10 (Without Tears)](https://haroonshakeel.medium.com/build-opencv-4-4-0-with-cuda-gpu-support-on-windows-10-without-tears-aa85d470bcd0)
+- Linux [Compiling OpenCV with CUDA support](https://www.pyimagesearch.com/2016/07/11/compiling-opencv-with-cuda-support/)
 
 ## Użycie (Wersja skryptowa)
 ```Linux
