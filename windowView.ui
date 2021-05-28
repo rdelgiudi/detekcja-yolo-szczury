@@ -10,6 +10,24 @@
     <height>752</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>914</width>
+    <height>752</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>914</width>
+    <height>752</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Wykrywacz szczurów</string>
   </property>
@@ -178,7 +196,7 @@
      <rect>
       <x>740</x>
       <y>170</y>
-      <width>62</width>
+      <width>81</width>
       <height>22</height>
      </rect>
     </property>
@@ -202,7 +220,7 @@
      <rect>
       <x>740</x>
       <y>210</y>
-      <width>62</width>
+      <width>81</width>
       <height>22</height>
      </rect>
     </property>
@@ -406,7 +424,7 @@
      <rect>
       <x>340</x>
       <y>250</y>
-      <width>61</width>
+      <width>81</width>
       <height>22</height>
      </rect>
     </property>
@@ -514,6 +532,93 @@
       <width>20</width>
       <height>20</height>
      </size>
+    </property>
+   </widget>
+   <widget class="Line" name="line">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>110</y>
+      <width>921</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="Line" name="line_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>270</y>
+      <width>921</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="Line" name="line_3">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>400</y>
+      <width>921</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pixelspercmLabel">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>250</y>
+      <width>261</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Ilość pikseli na centymetr:</string>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="pixelspercmSpinBox">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>250</y>
+      <width>81</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="maximum">
+     <double>1000.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.100000000000000</double>
+    </property>
+    <property name="value">
+     <double>0.000000000000000</double>
     </property>
    </widget>
   </widget>

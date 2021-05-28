@@ -63,7 +63,7 @@ cdef int vectorProduct(int x1, int y1, int x2, int y2, int x3, int y3):
 cdef bint checkExtremes(int x1, int y1, int x2, int y2, int x3, int y3):
     return min(x1, x2) <= x3 and x3 <= max(x1, x2) and min(y1, y2) <= y3 and y3 <= max(y1, y2)
 
-def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fileonly : bool, drawpaths : bool, maxloss : int, logging : bool,calccross : bool, isQt : bool, bar):
+def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fileonly : bool, drawpaths : bool, maxloss : int, logging : bool,calccross : bool, pixelspercm : float,  isQt : bool, bar):
 
     if isQt:
         import progresscontrollerqt as progresscontroller
@@ -142,12 +142,14 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
 
     #przygotowanie zmiennych potrzebnych do progressbar oraz systemu ID
     #oraz pomiaru fps
-    cdef list frametimes, previousIDs, previousCoord, paths, vectors
+    cdef list frametimes, previousIDs, previousCoord, paths, vectors, speed, speeds
     frametimes = []
     previousIDs = []
     previousCoord = []
     paths = []
     vectors = []
+    speed = []
+    speeds = []
 
     cdef list counter, pathcounter, successfulFrames
     cdef list cornerLT, cornerRT, cornerLB, cornerRB
@@ -163,6 +165,8 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
 
     for i in range(100):
         paths.append([])
+        speed.append(0)
+        speeds.append([])
         vectors.append([0, 0])
         counter.append(0)
         pathcounter.append(0)
@@ -339,6 +343,28 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
 
                 if drawpaths:
                     paths[IDs[iterator]].append([centerX, centerY])
+
+                    if len(paths[IDs[iterator]]) >= 30:
+                        tempdist = []
+                        prevelem = 0
+                        for j, pathi in enumerate(reversed(paths[IDs[iterator]])):
+                            if not j:
+                                prevelem = pathi
+                                continue
+
+                            tempdist.append(calcDist(prevelem[0], prevelem[1], pathi[0], pathi[1]))
+                            prevelem = pathi
+
+                            if j >= ffps: 
+                                break
+                        
+                        if pixelspercm:
+                            tempspeed = sum(tempdist) / pixelspercm 
+                        else:
+                            tempspeed = sum(tempdist)
+                        
+                        speed[IDs[iterator]] = tempspeed
+                        speeds[IDs[iterator]].append(tempspeed)
                 
                 ifCorner, whichCorner = inCorner(centerX, centerY, fwidth, fheight)
                 if ifCorner:
@@ -391,6 +417,17 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
                     color = [int(c) for c in colors[i]]
                     npaths = np.asarray(path, dtype=DTYPE2)
                     cv2.polylines(frame, [npaths], False, color, 2)
+            iter = 99
+            for reviter, sp in enumerate(reversed(speed)):
+                if iter in IDs and iter <= 10:
+                    if pixelspercm:
+                        speedtext = "ID: {} Speed: {:.2f} cm/s".format(iter, sp)
+                    else:
+                        speedtext = "ID: {} Speed: {:.2f} pixel/s".format(iter, sp)
+                    color = [int(c) for c in colors[iter]]
+                    cv2.putText(frame, speedtext, (10, fheight - round(fheight * 0.01) - ((reviter*30) - (98 * 30))),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
+                iter -= 1
 
         if not IDs:
             IDs = previousIDs.copy()
@@ -515,6 +552,34 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
             print("Prawy górny róg: {} klatek".format(cornerRT[i]))
             print("Lewy dolny róg: {} klatek".format(cornerLB[i]))
             print("Prawy dolny róg: {} klatek".format(cornerRB[i]))
+
+    print("")
+    print("Droga i prędkość:")
+    cdef list objlist
+    for i in range(0, 99):
+        if successfulFrames[i] != 0:
+            objdist = []
+            for j, point in enumerate(paths[i]):
+                if not j:
+                    prevx = point[0]
+                    prevy = point[1]
+                    continue
+                x = point[0]
+                y = point[1]
+                objdist.append(calcDist(x, y, prevx, prevy))
+
+                prevx = x
+                prevy = y
+
+
+            print("")
+            print("Obiekt {}:".format(i))
+            if not pixelspercm:
+                print("Przebyta droga: {:.2f} pikseli.".format(sum(objdist)))
+                print("Średnia prędkość: {:.2f} pikseli/s.".format(np.mean(speeds[i])))
+            else:
+                print("Przebyta droga: {:.2f} cm.".format(sum(objdist) / pixelspercm))
+                print("Średnia prędkość: {:.2f} cm/s.".format(np.mean(speeds[i])))
 
     print("////////////////////////////////////////////////////////////////////////////////////////")
     print("")

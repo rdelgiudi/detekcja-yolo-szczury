@@ -33,6 +33,8 @@ optionalNamed.add_argument("-l", "--logging", action="store_true",
     help = "zapisz raport ze śledzenia w pliku tekstowym")
 optionalNamed.add_argument("-cc", "--calccross", action="store_true",
     help = "oblicz ilość przecięć dróg")
+optionalNamed.add_argument("-p", "--pixelspercm", type = float, default=0,
+    help = "ilość pikseli składających się na jeden cm")
 
 args = ap.parse_args()
 
@@ -52,5 +54,5 @@ vs = cv2.VideoCapture(args.video)
 bar = progressbar.ProgressBar()
 
 yolodetect.startDetect(args.video ,vs ,args.confidence, args.threshold, args.output, args.fileonly, args.drawpaths, 
-                        args.maxloss, args.logging, args.calccross, False , bar)
+                        args.maxloss, args.logging, args.calccross, args.pixelspercm, False , bar)
 

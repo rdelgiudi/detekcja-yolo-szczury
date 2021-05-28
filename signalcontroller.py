@@ -15,7 +15,7 @@ ap.add_argument("-cy", "--cythonmode", action="store_true",
 
 args = ap.parse_args(rest)
 
-import windowView
+import windowview
 if args.cythonmode:
     import pyximport; pyximport.install(language_level=3, setup_args={'include_dirs': np.get_include()})
     import yolodetect
@@ -30,7 +30,7 @@ class Stream(QObject):
         self.newText.emit(str(text))
 
 
-class MainDialog(QMainWindow, windowView.Ui_MainWindow):
+class MainDialog(QMainWindow, windowview.Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainDialog, self).__init__(parent)
         self.setupUi(self)
@@ -44,6 +44,7 @@ class MainDialog(QMainWindow, windowView.Ui_MainWindow):
         self.maxloss = 1000
         self.logging = False
         self.calccross = False
+        self.pixelspercm = 0
 
         sys.stdout = Stream(newText=self.onUpdateText)
 
@@ -58,6 +59,7 @@ class MainDialog(QMainWindow, windowView.Ui_MainWindow):
         self.loggingCheckBox.clicked.connect(self.loggingClicked)
         self.startButton.clicked.connect(self.startClicked)
         self.browseButton.clicked.connect(self.browseClicked)
+        self.pixelspercmSpinBox.valueChanged.connect(self.pixelpercmChanged)
 
     def onUpdateText(self, text):
         cursor = self.textOutput.textCursor()
@@ -92,6 +94,10 @@ class MainDialog(QMainWindow, windowView.Ui_MainWindow):
     def thresholdChanged(self):
         self.threshold = round(self.thresholdSpinBox.value(), 2)
         #print("threshold: {}".format(self.threshold))
+    
+    def pixelpercmChanged(self):
+        self.pixelspercm = round(self.pixelspercmSpinBox.value(), 2)
+        #print("threshold: {}".format(self.threshold))
 
     def fileonlyClicked(self):
         if self.fileonly:
@@ -110,6 +116,8 @@ class MainDialog(QMainWindow, windowView.Ui_MainWindow):
             self.calccrossCheckBox.setEnabled(False)
             self.calccrossCheckBox.setChecked(False)
             self.calccross = False
+            self.pixelspercmLabel.setEnabled(False)
+            self.pixelspercmSpinBox.setEnabled(False)
             #print("drawpaths: False")
         else:
             self.drawpaths = True
@@ -117,6 +125,8 @@ class MainDialog(QMainWindow, windowView.Ui_MainWindow):
             self.maxlossSpinBox.setEnabled(True)
             self.calccrossLabel.setEnabled(True)
             self.calccrossCheckBox.setEnabled(True)
+            self.pixelspercmLabel.setEnabled(True)
+            self.pixelspercmSpinBox.setEnabled(True)
             #print("drawpaths: True")
 
     def maxlossChanged(self):
@@ -166,7 +176,7 @@ class MainDialog(QMainWindow, windowView.Ui_MainWindow):
         self.startButton.setText("Stop")
         self.startButton.setStyleSheet("color: red")
         yolodetect.startDetect(self.vs ,vs, self.confidence, self.threshold, self.outputfile, self.fileonly, self.drawpaths,
-                            self.maxloss, self.logging, self.calccross, True, self.progressBar)
+                            self.maxloss, self.logging, self.calccross, self.pixelspercm, True, self.progressBar)
         self.started = False
         self.startButton.setText("Start")
         self.startButton.setStyleSheet("color : black")
