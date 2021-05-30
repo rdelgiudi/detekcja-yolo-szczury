@@ -110,23 +110,9 @@ class MainDialog(QMainWindow, windowview.Ui_MainWindow):
     def drawpathsClicked(self):
         if self.drawpaths:
             self.drawpaths = False
-            self.maxlossLabel.setEnabled(False)
-            self.maxlossSpinBox.setEnabled(False)
-            self.calccrossLabel.setEnabled(False)
-            self.calccrossCheckBox.setEnabled(False)
-            self.calccrossCheckBox.setChecked(False)
-            self.calccross = False
-            self.pixelspercmLabel.setEnabled(False)
-            self.pixelspercmSpinBox.setEnabled(False)
             #print("drawpaths: False")
         else:
             self.drawpaths = True
-            self.maxlossLabel.setEnabled(True)
-            self.maxlossSpinBox.setEnabled(True)
-            self.calccrossLabel.setEnabled(True)
-            self.calccrossCheckBox.setEnabled(True)
-            self.pixelspercmLabel.setEnabled(True)
-            self.pixelspercmSpinBox.setEnabled(True)
             #print("drawpaths: True")
 
     def maxlossChanged(self):

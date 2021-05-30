@@ -11,6 +11,7 @@
 __pycache__/
 vids/
 backup/
+output/
 cythonize.py
 yolov3.cfg
 yolov3.weights

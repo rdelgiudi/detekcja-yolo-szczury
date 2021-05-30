@@ -15,7 +15,8 @@ class Logger(object):
         logName = os.path.basename(videoname)
         logName = os.path.splitext(logName)[0]
         logName += ".log"
-        self.log = open(logName, "w")
+        logDir = "output/" + logName
+        self.log = open(logDir, "w")
 
     def write(self, message):
         self.terminal.write(message)
@@ -72,9 +73,6 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
     if fileonly is True and outputfile is None:
         print("[BŁĄD] Za mało argumentów: Podaj nazwę pliku wynikowego.")
         exit(1)
-    if not drawpaths and calccross:
-        print("[BŁĄD] Przecięcia ścieżek mogą być obliczone tylko w trybie ich rysowania!")
-        exit(1)
 
     #wczytanie listy wykrywalnych obiektów z pliku coco.names
     objectNames = ["rat"]
@@ -111,7 +109,10 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
 
     #jeżeli zapisujemy do pliku, to tutaj przygotowywany jest strumień wyjściowy
     if outputfile is not None:
-        outputfile = outputfile + ".mp4"
+        if not os.path.isdir("output"):
+            os.mkdir("output")
+        outputname = outputfile
+        outputfile = "output/" + outputfile + ".mp4"
         if fileonly is False:
             out = cv2.VideoWriter(outputfile,cv2.VideoWriter_fourcc('a','v','c','1'), ffps, dim)
         else:
@@ -213,7 +214,7 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
                     confidences.append(float(confidence))
                     classIDs.append(classID)                        
 
-        #uruchomienie Non Maximum Supression
+        #uruchomienie Non Maximum Suppression
         idxs = cv2.dnn.NMSBoxes(boxes, confidences, conf, thold)
 
         #inicjalizacja zmiennych potrzebnych do systemu ID
@@ -266,29 +267,29 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
                     vectors[IDs[iterator]] = [newCoord[IDs.index(IDs[iterator])][0] - previousCoord[previousIDs.index(IDs[iterator])][0], 
                     newCoord[IDs.index(IDs[iterator])][1] - previousCoord[previousIDs.index(IDs[iterator])][1]]
 
-                if drawpaths:
-                    paths[IDs[iterator]].append([centerX, centerY])
-                    if len(paths[IDs[iterator]]) >= 30:
-                        tempdist = []
-                        prevelem = 0
-                        for j, pathi in enumerate(reversed(paths[IDs[iterator]])):
-                            if not j:
-                                prevelem = pathi
-                                continue
+                paths[IDs[iterator]].append([centerX, centerY])
 
-                            tempdist.append(calcDist(prevelem[0], prevelem[1], pathi[0], pathi[1]))
+                if len(paths[IDs[iterator]]) >= 30:
+                    tempdist = []
+                    prevelem = 0
+                    for j, pathi in enumerate(reversed(paths[IDs[iterator]])):
+                        if not j:
                             prevelem = pathi
+                            continue
 
-                            if j >= ffps: 
-                                break
-                        
-                        if pixelspercm:
-                            tempspeed = sum(tempdist) / pixelspercm 
-                        else:
-                            tempspeed = sum(tempdist)
-                        
-                        speed[IDs[iterator]] = tempspeed
-                        speeds[IDs[iterator]].append(tempspeed)
+                        tempdist.append(calcDist(prevelem[0], prevelem[1], pathi[0], pathi[1]))
+                        prevelem = pathi
+
+                        if j >= ffps: 
+                            break
+                    
+                    if pixelspercm:
+                        tempspeed = sum(tempdist) / pixelspercm 
+                    else:
+                        tempspeed = sum(tempdist)
+                    
+                    speed[IDs[iterator]] = tempspeed
+                    speeds[IDs[iterator]].append(tempspeed)
                     
 
                 ifCorner, whichCorner = inCorner(centerX, centerY, fwidth, fheight)
@@ -348,17 +349,17 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
                     color = [int(c) for c in colors[i]]
                     npaths = np.asarray(path, dtype=np.int32)
                     cv2.polylines(frame, [npaths], False, color, 2)
-            iter = 99
-            for reviter, sp in enumerate(reversed(speed)):
-                if iter in IDs and iter <= 10:
-                    if pixelspercm:
-                        speedtext = "ID: {} Speed: {:.2f} cm/s".format(iter, sp)
-                    else:
-                        speedtext = "ID: {} Speed: {:.2f} pixel/s".format(iter, sp)
-                    color = [int(c) for c in colors[iter]]
-                    cv2.putText(frame, speedtext, (10, fheight - round(fheight * 0.01) - ((reviter*30) - (98 * 30))),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
-                iter -= 1
+        iter = 99
+        for reviter, sp in enumerate(reversed(speed)):
+            if iter in IDs and iter <= 1:
+                if pixelspercm:
+                    speedtext = "ID: {} Speed: {:.2f} cm/s".format(iter, sp)
+                else:
+                    speedtext = "ID: {} Speed: {:.2f} pixel/s".format(iter, sp)
+                color = [int(c) for c in colors[iter]]
+                cv2.putText(frame, speedtext, (10, fheight - round(fheight * 0.01) - ((reviter*30) - (98 * 30))),
+                cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
+            iter -= 1
 
         if not IDs:
             IDs = previousIDs.copy()
@@ -386,6 +387,8 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
         fps = 1/fps
         fpsinfo = "FPS: {:.2f}".format(fps)
 
+        framecopy = frame.copy()
+
         cv2.putText(frame, fpsinfo, (10, 30),
         cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
         cv2.putText(frame, frametime, (10, 60),
@@ -399,10 +402,17 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
         if key == ord("e"):
             totalframes = framenum
             break
+    
+
     print("")
     pathcrossed = 0
     cv2.destroyAllWindows()
-    if drawpaths and calccross:
+
+    if outputfile is not None:
+        framePath = "output/" + outputname + "LastFrame.jpg"
+        cv2.imwrite(framePath, framecopy)
+
+    if calccross:
         print("[INFO] Rozpoczynanie analizy liczby przecięć ścieżek, proszę czekać...")
         bar = progresscontroller.setupBar(bar, (len(paths[0]) -1))
         for j in range(0, len(paths[0]) - 1):
@@ -443,6 +453,8 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
                     #i += ffps * 3
                     continue
     if logging:
+        if not os.path.isdir("output"):
+            os.mkdir("output")
         stdoutcopy = sys.stdout
         sys.stdout = Logger(videoname)
     print("")
@@ -456,28 +468,28 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
 
     print("Minimalny próg detekcji: {:.2f}".format(conf))
     print("Próg NMS: {:.2f}".format(thold))
-    print("Liczba przebadanych klatek: {}".format(framenum))
+    print("Liczba przebadanych klatek: {} ({:.2f} sekund)".format(framenum, framenum / ffps))
     for i in range(0, 99):
         if successfulFrames[i] != 0:
             successpercent = float((successfulFrames[i]/totalframes) * 100)
             lostframes = int(totalframes - successfulFrames[i])
             print("Obiekt nr {} wyśledzony przez {:.2f}% klatek (zgubiony w {} klatkach).".format(i, successpercent, lostframes))
 
-    if drawpaths and calccross:
+    if calccross:
         print("Obiekt nr 0 i 1 przecieły drogi {} razy.".format(pathcrossed))
     
-    print("")
+    print("\n")
     print("Przebycie w rogach:")
     for i in range(0, 99):
         if cornerLB[i] != 0 or cornerLT[i] != 0 or cornerRB[i] != 0 or cornerRT[i] != 0:
             print("")
             print("Obiekt {}:".format(i))
-            print("Lewy górny róg: {} klatek".format(cornerLT[i]))
-            print("Prawy górny róg: {} klatek".format(cornerRT[i]))
-            print("Lewy dolny róg: {} klatek".format(cornerLB[i]))
-            print("Prawy dolny róg: {} klatek".format(cornerRB[i]))
+            print("Lewy górny róg: {} klatek ({:.2f} sekund)".format(cornerLT[i], cornerLT[i] / ffps))
+            print("Prawy górny róg: {} klatek ({:.2f} sekund)".format(cornerRT[i], cornerRT[i] / ffps))
+            print("Lewy dolny róg: {} klatek ({:.2f} sekund)".format(cornerLB[i], cornerLB[i] / ffps))
+            print("Prawy dolny róg: {} klatek ({:.2f} sekund)".format(cornerRB[i], cornerRB[i] / ffps))
 
-    print("")
+    print("\n")
     print("Droga i prędkość:")
     for i in range(0, 99):
         if successfulFrames[i] != 0:
