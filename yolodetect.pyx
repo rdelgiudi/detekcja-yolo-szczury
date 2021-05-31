@@ -297,11 +297,11 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
         #inicjalizacja zmiennych potrzebnych do systemu ID
         newCoord = []
         IDs = []
-
+        
         #przetworzenie wyników z NMS oraz narysowanie ich na klatce
         if len(idxs) > 0:
             for iterator, i in enumerate(idxs.flatten()):
-                if iterator > 99:
+                if iterator > 1:
                     break
                 (x, y) = (boxes[i][0], boxes[i][1])
                 (w, h) = (boxes[i][2], boxes[i][3])
@@ -420,6 +420,9 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
                     color = [int(c) for c in colors[i]]
                     npaths = np.asarray(path, dtype=DTYPE2)
                     cv2.polylines(frame, [npaths], False, color, 2)
+
+        framecopy = frame.copy()
+
         iter = 99
         for reviter, sp in enumerate(reversed(speed)):
             if iter in IDs and iter <= 1:
@@ -457,8 +460,6 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
         frametime = "Frametime: {:.1f} ms".format(fps * 1000)
         fps = 1/fps
         fpsinfo = "FPS: {:.2f}".format(fps)
-
-        framecopy = frame.copy()
 
         cv2.putText(frame, fpsinfo, (10, 30),
         cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
@@ -528,7 +529,10 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
         if not os.path.isdir("output"):
             os.mkdir("output")
         stdoutcopy = sys.stdout
-        sys.stdout = Logger(videoname)
+        if outputfile is not None:
+            sys.stdout = Logger(outputname)
+        else:
+            sys.stdout = Logger(videoname)
     print("")
     print("Data i czas: {}".format(datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
     print("TRYB CYTHON")
