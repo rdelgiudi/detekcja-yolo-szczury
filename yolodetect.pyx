@@ -51,10 +51,10 @@ def getRectCenter(x1, y1, x2, y2):
     yCenter = (y1 + y2) / 2
     return xCenter, yCenter
 
-#cdef float calcDist(int x1, int y1, int x2, int y2):
-#    return sqrt(pow(x2-x1, 2) + pow(y2-y1, 2))
-def calcDist(x1, y1, x2, y2):
-    return math.sqrt((x2-x1)**2 + (y2-y1)**2)
+cdef float calcDist(int x1, int y1, int x2, int y2):
+    return sqrt(pow(x2-x1, 2) + pow(y2-y1, 2))
+#def calcDist(x1, y1, x2, y2):
+#    return math.sqrt((x2-x1)**2 + (y2-y1)**2)
 
 cdef int vectorProduct(int x1, int y1, int x2, int y2, int x3, int y3):
     X1 = x3 - x1
@@ -96,7 +96,7 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
 
     #zaznaczenie ścieżki plików dla algorytmu YOLOv3
     cdef str weightsPath, configPath
-    weightsPath = "yolov3_rats_v3.weights"
+    weightsPath = "yolov3_rats_v3_1.weights"
     configPath = "yolov3_testing.cfg"
 
     #wczytanie detektora YOLOv3 z wytrenowanego zestawu danych COCO oraz uruchomienie CUDA (jeżeli jest wspierane)
@@ -407,19 +407,25 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
             else:
                 counter[prevID] = 0
 
-        if drawpaths:
-            for i, path in enumerate(paths):
-                if i not in IDs:
-                    pathcounter[i] += 1
-                else:
-                    pathcounter[i] = 0
-                if pathcounter[i] > maxloss:
-                    pathcounter[i] = 0
-                    paths[i] = []
-                if path != [] and len(path) > 1:
-                    color = [int(c) for c in colors[i]]
-                    npaths = np.asarray(path, dtype=DTYPE2)
-                    cv2.polylines(frame, [npaths], False, color, 2)
+        for i, path in enumerate(paths):
+            if i not in IDs:
+                pathcounter[i] += 1
+            else:
+                pathcounter[i] = 0
+            if pathcounter[i] > maxloss:
+                pathcounter[i] = 0
+                paths[i] = []
+                successfulFrames[i] = 0
+                cornerLB[i] = 0
+                cornerLT[i] = 0
+                cornerRB[i] = 0
+                cornerRT[i] = 0
+                speed[i] = 0
+                speeds[i] = []
+            if path != [] and len(path) > 1 and drawpaths:
+                color = [int(c) for c in colors[i]]
+                npaths = np.asarray(path, dtype=np.int32)
+                cv2.polylines(frame, [npaths], False, color, 2)
 
         framecopy = frame.copy()
 

@@ -336,19 +336,25 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
             else:
                 counter[prevID] = 0
 
-        if drawpaths:
-            for i, path in enumerate(paths):
-                if i not in IDs:
-                    pathcounter[i] += 1
-                else:
-                    pathcounter[i] = 0
-                if pathcounter[i] > maxloss:
-                    pathcounter[i] = 0
-                    paths[i] = []
-                if path != [] and len(path) > 1:
-                    color = [int(c) for c in colors[i]]
-                    npaths = np.asarray(path, dtype=np.int32)
-                    cv2.polylines(frame, [npaths], False, color, 2)
+        for i, path in enumerate(paths):
+            if i not in IDs:
+                pathcounter[i] += 1
+            else:
+                pathcounter[i] = 0
+            if pathcounter[i] > maxloss:
+                pathcounter[i] = 0
+                paths[i] = []
+                successfulFrames[i] = 0
+                cornerLB[i] = 0
+                cornerLT[i] = 0
+                cornerRB[i] = 0
+                cornerRT[i] = 0
+                speed[i] = 0
+                speeds[i] = []
+            if path != [] and len(path) > 1 and drawpaths:
+                color = [int(c) for c in colors[i]]
+                npaths = np.asarray(path, dtype=np.int32)
+                cv2.polylines(frame, [npaths], False, color, 2)
 
         framecopy = frame.copy()
         
@@ -413,7 +419,7 @@ def startDetect(videoname, vs ,conf : float, thold : float, outputfile : str, fi
         framePath = "output/" + outputname + "LastFrame.jpg"
         cv2.imwrite(framePath, framecopy)
 
-    if calccross:
+    if calccross and successfulFrames[1] > 0:
         print("[INFO] Rozpoczynanie analizy liczby przecięć ścieżek, proszę czekać...")
         bar = progresscontroller.setupBar(bar, (len(paths[0]) -1))
         for j in range(0, len(paths[0]) - 1):
